@@ -3,18 +3,23 @@ package JDBC;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DBConnectionTest{
     public static void main(String[] args){
-        String url = "jdbc:mariadb://localhost:3306/campdb";
-        String user = "root";
-        String password = "camp1234";
+        Properties props = DBConfig.load();
 
-        try(Connection conn = DriverManager.getConnection(url, user, password)){
+        String url = props.getProperty("db.url");
+        String user = props.getProperty("db.user");
+        String password = props.getProperty("db.password");
+
+        try(Connection conn = DriverManager.getConnection(url, user, password)) {
             System.out.println("DB connected");
-        } catch (SQLException e) {
+        }
+        catch (SQLException e){
             System.out.println("DB connection error");
             e.printStackTrace();
         }
+
     }
 }
