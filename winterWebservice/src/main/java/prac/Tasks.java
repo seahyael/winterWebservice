@@ -8,8 +8,8 @@ public class Tasks {
     private boolean done;
     private LocalDateTime created_at;
 
-    Tasks(){}
-    Tasks(long id, String title, boolean done){
+    public Tasks(){}
+    public Tasks(long id, String title, boolean done){
         this.id = id;
         this.title = title;
         this.done = done;
