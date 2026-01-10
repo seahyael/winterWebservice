@@ -9,15 +9,20 @@ public class TasksManager {
         tasksCRUD = new TasksCRUD(s);
     }
     public int selectMenu(){
+        System.out.println("------------------------------");
         System.out.println("To-do List 프로그램");
-        System.out.print("1)추가 2)목록 3)수정 4)삭제 0)종료\n원하는 메뉴는? ");
+        System.out.println("------------------------------");
+        System.out.print("1)추가 2)목록 3)수정 4)삭제 0)종료\n> 원하는 메뉴는? ");
         return Integer.parseInt(s.nextLine());
     }
 
     public void start() {
         while (true) {
             int menu = selectMenu();
-            if(menu == 0) break;
+            if(menu == 0) {
+                System.out.println("\n프로그램을 종료합니다.\n");
+                break;
+            }
 
             if(menu == 1){
                 tasksCRUD.addTask();

@@ -51,9 +51,9 @@ public class Tasks {
     @Override
     public String toString(){
         String str = String.format("%-3s", id)
-                + String.format("%-20s", title)
-                + String.format("%5s", done)
-                + String.format("  " + "%-30s", created_at);
+                + String.format("%20s", title)
+                + String.format("  " + "%-5s", done)
+                + String.format("  " + "%-20s", created_at);
         return str;
     }
 
