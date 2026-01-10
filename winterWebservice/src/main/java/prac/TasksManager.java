@@ -25,6 +25,10 @@ public class TasksManager {
             else if(menu == 2){
                 tasksCRUD.listTask();
             }
+            else if(menu == 3){
+                tasksCRUD.listTask();
+                tasksCRUD.updateTask();
+            }
         }
     }
 }
