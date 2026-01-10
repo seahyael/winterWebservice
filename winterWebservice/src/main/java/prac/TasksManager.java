@@ -9,6 +9,7 @@ public class TasksManager {
         tasksCRUD = new TasksCRUD(s);
     }
     public int selectMenu(){
+        System.out.println("To-do List 프로그램");
         System.out.print("1)추가 2)목록 3)수정 4)삭제 0)종료\n원하는 메뉴는? ");
         return Integer.parseInt(s.nextLine());
     }
@@ -22,7 +23,7 @@ public class TasksManager {
                 tasksCRUD.addTask();
             }
             else if(menu == 2){
-                //list
+                tasksCRUD.listTask();
             }
         }
     }

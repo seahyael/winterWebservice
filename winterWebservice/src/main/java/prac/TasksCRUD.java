@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class TasksCRUD implements ICRUD{
     ArrayList<Tasks> list;
     Scanner s;
-    int id = 0;
+    int id = 1;
 
     TasksCRUD(Scanner s){
         list = new ArrayList<>();
@@ -22,7 +22,14 @@ public class TasksCRUD implements ICRUD{
     public void addTask(){
         Tasks one = (Tasks) add();
         list.add(one);
-        System.out.println("할 일이 추가되었습니다.");
+        System.out.println("할 일이 추가되었습니다.\n");
+    }
+
+    public void listTask(){
+        System.out.println("    **할 일 목록**");
+        for(int i = 0; i<list.size(); i++){
+            System.out.println(list.get(i).toString() + "\n");
+        }
     }
 
     @Override

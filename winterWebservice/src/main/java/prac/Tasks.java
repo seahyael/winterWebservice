@@ -47,4 +47,14 @@ public class Tasks {
     public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
     }
+
+    @Override
+    public String toString(){
+        String str = String.format("%-3s", id)
+                + String.format("%-20s", title)
+                + String.format("%5s", done)
+                + String.format("  " + "%-30s", created_at);
+        return str;
+    }
+
 }
