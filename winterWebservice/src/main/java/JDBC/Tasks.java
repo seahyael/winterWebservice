@@ -6,9 +6,10 @@ public class Tasks {
     private long id;
     private String title;
     private boolean done;
-    private String created_at;
+    private LocalDateTime created_at;
 
-    public Tasks(long id, String title, boolean done, String created_at){
+    public Tasks(){}
+    public Tasks(long id, String title, boolean done, LocalDateTime created_at){
         this.id = id;
         this.title = title;
         this.done = done;
@@ -39,21 +40,21 @@ public class Tasks {
         this.done = done;
     }
 
-    public String getCreated_at() {
+    public LocalDateTime getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(String created_at) {
+    public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
     }
 
     @Override
     public String toString(){
         String str = String.format("%-3s", id)
-                +"  "
-                +String.format("%-20s", title)
-                +String.format("%5s", done)
-                +"  " + created_at;
-        return null;
+                + String.format("%20s", title)
+                + String.format("  " + "%-5s", done)
+                + String.format("  " + "%-20s", created_at);
+        return str;
     }
+
 }
