@@ -1,15 +1,14 @@
 package JDBC;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
 public class TasksCRUD implements ICRUD{
+    final String selectAll = "select * from tasks";
+    final String insertData = "insert into tasks(title) values(?)";
     ArrayList<Tasks> list;
     Scanner s;
     Connection conn;
@@ -20,21 +19,30 @@ public class TasksCRUD implements ICRUD{
         conn = DBConnection.getConnection();
     }
     @Override
-    public Object add() {
-        System.out.print("\n>> 할 일 입력: ");
-        String task = s.nextLine();
-        return new Tasks();
+    public int add(String title) {
+        int retval = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = conn.prepareStatement(insertData);
+            pstmt.setString(1, title);
+            retval = pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return retval;
     }
 
     public void addTask(){
-        Tasks one = (Tasks) add();
-        list.add(one);
-        System.out.println("\n할 일이 추가되었습니다.");
+        System.out.print("\n>> 할 일 입력: ");
+        String task = s.nextLine();
+        int result = add(task);
+        if(result > 0) System.out.println("\n할 일이 추가되었습니다.");
+        else if(result == 0) System.out.println("\n할 일 추가에 실패하였습니다.");
     }
 
     public void loadData(){
         list.clear();
-        String selectAll = "select * from tasks";
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(selectAll);
@@ -52,8 +60,6 @@ public class TasksCRUD implements ICRUD{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     public void listTask(){

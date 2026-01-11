@@ -1,7 +1,7 @@
 package JDBC;
 
 public interface ICRUD {
-    public Object add();
+    public int add(String title);
 
     public int update(long id);
 
