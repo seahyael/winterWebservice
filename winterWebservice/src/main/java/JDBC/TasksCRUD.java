@@ -9,6 +9,8 @@ import java.util.Scanner;
 public class TasksCRUD implements ICRUD{
     final String selectAll = "select * from tasks";
     final String insertData = "insert into tasks(title) values(?)";
+    final String updateDone = "update tasks set done = ? where id = ?";
+    final String updateTitle = "update tasks set title = ? where id = ?";
     ArrayList<Tasks> list;
     Scanner s;
     Connection conn;
@@ -72,31 +74,38 @@ public class TasksCRUD implements ICRUD{
 
     @Override
     public int update(long i) {
-        for (Tasks t : list) {
-            if (t.getId() == i) {
-                System.out.print("\n1) 할 일 수정 2) 완료 / 미완료 변경\n> 원하는 메뉴는? ");
-                int menu = s.nextInt();
-                s.nextLine();
-                if (menu == 1) {
-                    System.out.print(">> 새 할 일 입력: ");
-                    t.setTitle(s.nextLine());
-                } else if (menu == 2) {
-                    t.setDone(!t.isDone());
-                }
-                return 1;
-            }
+        int retval = 0;
+        PreparedStatement pstmt;
+        System.out.print(">> 새 할 일 입력: ");
+        String title = s.nextLine();
+        try {
+            pstmt = conn.prepareStatement(updateTitle);
+            pstmt.setString(1, title);
+            pstmt.setLong(2, i);
+            retval = pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return 0;
+        return retval;
     }
 
     public void updateTask(){
         System.out.print("> 수정하고 싶은 할 일은?: ");
-        int target = Integer.parseInt(s.nextLine());
-        int result =  update(target);
+        int target = s.nextInt();
+
+        System.out.print("\n1) 할 일 수정 2) 완료 / 미완료 변경\n> 원하는 메뉴는? ");
+        int menu = s.nextInt();
+        s.nextLine();
+
+        int result = 0;
+        if(menu == 1) result = update(target);
+
+
         if(result == 0){
             System.out.println("\n존재하지 않는 id입니다.\n");
         }
-        else if(result == 1){
+        else if(result > 0){
             System.out.println("\n할 일이 수정되었습니다.\n");
         }
     }
