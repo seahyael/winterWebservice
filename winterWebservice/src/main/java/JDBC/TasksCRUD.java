@@ -11,6 +11,7 @@ public class TasksCRUD implements ICRUD{
     final String insertData = "insert into tasks(title) values(?)";
     final String updateDone = "UPDATE tasks SET done = NOT done WHERE id = ?";
     final String updateTitle = "update tasks set title = ? where id = ?";
+    final String deleteData = "delete from tasks where id = ?";
     ArrayList<Tasks> list;
     Scanner s;
     Connection conn;
@@ -90,7 +91,7 @@ public class TasksCRUD implements ICRUD{
         return retval;
     }
 
-    public int complete(long id){
+    public int toggleDone(long id){
         int retval = 0;
         PreparedStatement pstmt;
         try {
@@ -114,7 +115,7 @@ public class TasksCRUD implements ICRUD{
 
         int result = 0;
         if(menu == 1) result = update(target);
-        else if(menu == 2) result = complete(target);
+        else if(menu == 2) result = toggleDone(target);
 
 
         if(result == 0){
@@ -128,15 +129,17 @@ public class TasksCRUD implements ICRUD{
 
     @Override
     public int delete(long id){
-        long targetId = id;
-        Iterator<Tasks> it = list.iterator();
-        while (it.hasNext()) {
-            if (it.next().getId() == targetId) {
-                it.remove();
-                return 1;
-            }
+        int retval = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = conn.prepareStatement(deleteData);
+            pstmt.setLong(1, id);
+            retval = pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return 0;
+        return retval;
     }
 
     public void deleteTask(){
@@ -146,7 +149,7 @@ public class TasksCRUD implements ICRUD{
         if(result == 0){
             System.out.println("\n존재하지 않는 id입니다.\n");
         }
-        else if(result == 1){
+        else if(result > 0){
             System.out.println("\n할 일이 삭제되었습니다.\n");
         }
     }
