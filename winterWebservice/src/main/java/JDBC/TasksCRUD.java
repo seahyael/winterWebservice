@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class TasksCRUD implements ICRUD{
     final String selectAll = "select * from tasks";
     final String insertData = "insert into tasks(title) values(?)";
-    final String updateDone = "update tasks set done = ? where id = ?";
+    final String updateDone = "UPDATE tasks SET done = NOT done WHERE id = ?";
     final String updateTitle = "update tasks set title = ? where id = ?";
     ArrayList<Tasks> list;
     Scanner s;
@@ -73,7 +73,7 @@ public class TasksCRUD implements ICRUD{
     }
 
     @Override
-    public int update(long i) {
+    public int update(long id) {
         int retval = 0;
         PreparedStatement pstmt;
         System.out.print(">> 새 할 일 입력: ");
@@ -81,7 +81,21 @@ public class TasksCRUD implements ICRUD{
         try {
             pstmt = conn.prepareStatement(updateTitle);
             pstmt.setString(1, title);
-            pstmt.setLong(2, i);
+            pstmt.setLong(2, id);
+            retval = pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return retval;
+    }
+
+    public int complete(long id){
+        int retval = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = conn.prepareStatement(updateDone);
+            pstmt.setLong(1, id);
             retval = pstmt.executeUpdate();
             pstmt.close();
         } catch (SQLException e) {
@@ -100,6 +114,7 @@ public class TasksCRUD implements ICRUD{
 
         int result = 0;
         if(menu == 1) result = update(target);
+        else if(menu == 2) result = complete(target);
 
 
         if(result == 0){
@@ -112,8 +127,8 @@ public class TasksCRUD implements ICRUD{
 
 
     @Override
-    public int delete(long i){
-        long targetId = i;
+    public int delete(long id){
+        long targetId = id;
         Iterator<Tasks> it = list.iterator();
         while (it.hasNext()) {
             if (it.next().getId() == targetId) {
