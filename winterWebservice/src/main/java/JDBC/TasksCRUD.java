@@ -3,7 +3,6 @@ package JDBC;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class TasksCRUD implements ICRUD{
@@ -41,7 +40,7 @@ public class TasksCRUD implements ICRUD{
         String task = s.nextLine();
         int result = add(task);
         if(result > 0) System.out.println("\n할 일이 추가되었습니다.");
-        else if(result == 0) System.out.println("\n할 일 추가에 실패하였습니다.");
+        else System.out.println("\n할 일 추가에 실패하였습니다.");
     }
 
     public void loadData(){
@@ -108,8 +107,13 @@ public class TasksCRUD implements ICRUD{
     public void updateTask(){
         System.out.print("> 수정하고 싶은 할 일은?: ");
         int target = s.nextInt();
+        s.nextLine();
+        if(!exist(target)) {
+            System.out.println("\n존재하지 않는 id입니다.\n");
+            return;
+        }
 
-        System.out.print("\n1) 할 일 수정 2) 완료 / 미완료 변경\n> 원하는 메뉴는? ");
+        System.out.print("\n1) 내용 수정 2) 완료 / 미완료 변경\n> 원하는 메뉴는? ");
         int menu = s.nextInt();
         s.nextLine();
 
@@ -117,13 +121,8 @@ public class TasksCRUD implements ICRUD{
         if(menu == 1) result = update(target);
         else if(menu == 2) result = toggleDone(target);
 
-
-        if(result == 0){
-            System.out.println("\n존재하지 않는 id입니다.\n");
-        }
-        else if(result > 0){
-            System.out.println("\n할 일이 수정되었습니다.\n");
-        }
+        if(result > 0) System.out.println("\n할 일이 수정되었습니다.\n");
+        else  System.out.println("\n할 일 수정에 실패하였습니다.\n");
     }
 
 
@@ -145,12 +144,32 @@ public class TasksCRUD implements ICRUD{
     public void deleteTask(){
         System.out.print("> 삭제하고 싶은 할 일은?: ");
         int target = Integer.parseInt(s.nextLine());
-        int result =  delete(target);
-        if(result == 0){
+        if(!exist(target)) {
             System.out.println("\n존재하지 않는 id입니다.\n");
+            return;
         }
-        else if(result > 0){
-            System.out.println("\n할 일이 삭제되었습니다.\n");
+        int result =  delete(target);
+
+        if(result > 0) System.out.println("\n할 일이 삭제되었습니다.\n");
+        else System.out.println("\n할 일 삭제에 실패하였습니다.\n");
+    }
+
+    public boolean exist(long id){
+        String find = "select 1 from tasks where id = ?";
+        PreparedStatement pstmt;
+        ResultSet rs;
+        boolean result = false;
+
+        try {
+            pstmt = conn.prepareStatement(find);
+            pstmt.setLong(1, id);
+            rs = pstmt.executeQuery();
+            result = rs.next();
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+        return result;
     }
 }
