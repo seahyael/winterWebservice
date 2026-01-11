@@ -1,3 +1,5 @@
+package JDBC;
+
 import prac.PracManager;
 
 public class Main {

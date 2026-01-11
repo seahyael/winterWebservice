@@ -1,4 +1,4 @@
-package prac;
+package JDBC;
 
 import java.time.LocalDateTime;
 
@@ -6,14 +6,13 @@ public class Tasks {
     private long id;
     private String title;
     private boolean done;
-    private LocalDateTime created_at;
+    private String created_at;
 
-    public Tasks(){}
-    public Tasks(long id, String title, boolean done){
+    public Tasks(long id, String title, boolean done, String created_at){
         this.id = id;
         this.title = title;
         this.done = done;
-        this.created_at = LocalDateTime.now();
+        this.created_at = created_at;
     }
 
     public long getId() {
@@ -40,21 +39,21 @@ public class Tasks {
         this.done = done;
     }
 
-    public LocalDateTime getCreated_at() {
+    public String getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
+    public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 
     @Override
     public String toString(){
         String str = String.format("%-3s", id)
-                + String.format("%20s", title)
-                + String.format("  " + "%-5s", done)
-                + String.format("  " + "%-20s", created_at);
-        return str;
+                +"  "
+                +String.format("%-20s", title)
+                +String.format("%5s", done)
+                +"  " + created_at;
+        return null;
     }
-
 }

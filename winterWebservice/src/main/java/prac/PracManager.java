@@ -2,11 +2,11 @@ package prac;
 
 import java.util.Scanner;
 
-public class TasksManager {
+public class PracManager {
     Scanner s = new Scanner(System.in);
-    TasksCRUD tasksCRUD;
-    public TasksManager(){
-        tasksCRUD = new TasksCRUD(s);
+    PracCRUD tasksCRUD;
+    public PracManager(){
+        tasksCRUD = new PracCRUD(s);
     }
     public int selectMenu(){
         System.out.println("------------------------------");
@@ -33,6 +33,10 @@ public class TasksManager {
             else if(menu == 3){
                 tasksCRUD.listTask();
                 tasksCRUD.updateTask();
+            }
+            else if(menu == 4){
+                tasksCRUD.listTask();
+                tasksCRUD.deleteTask();
             }
         }
     }
